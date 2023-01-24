@@ -3,12 +3,13 @@ import pygame as pg
 from pygameBoilerplate import load_image, load_sound
 from paths import PROJECT_ROOT, RESOURCES_DIR
 from pawn import Pawn
+from collision import StationaryCollision
 
 def main():
     pg.init()
-    #print(f"{pg.display.toggle_fullscreen()}")
-    #pg.display.toggle_fullscreen()
+    
     screen = pg.display.set_mode((1280,720),pg.SCALED)
+    #pg.display.toggle_fullscreen()
     pg.mouse.set_visible(False)
     background = pg.Surface(screen.get_size())
     background = background.convert()
@@ -17,10 +18,14 @@ def main():
     pg.display.flip()
 
     uproot = Pawn(filename = 'uprootpixel.png',movemode = 'mouse')
-    sprites = pg.sprite.RenderPlain((uproot))
+    sprites = pg.sprite.RenderPlain((uproot.sprite))
+    print(uproot.collision_type)
+    uproot.collision_type = StationaryCollision()
+    print(uproot.collision_type)
+
     exit = False
     while not exit:
-
+        #print(uproot.world_position)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 exit = True
@@ -30,6 +35,7 @@ def main():
         screen.blit(background,(0,0))
         sprites.draw(screen)
         pg.display.flip()
+        
     pg.quit()
 
 main()
