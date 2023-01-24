@@ -15,6 +15,9 @@ class Pawn(Actor):
         self.movemode = kwargs['movemode']
         self.collision_type_ = PawnCollision()
         self.world_position_ = (0,0,0)
+        self.velocity_ = (0,0,0)
+        self.moveRight = False
+        self.moveDown = False
         self.sprite = pg.sprite.Sprite()
         pg.sprite.Sprite.__init__(self)
         self.sprite.image, self.sprite.rect= load_image(RESOURCES_DIR,self.filename,-1)
@@ -22,6 +25,8 @@ class Pawn(Actor):
     def update(self):
         if self.movemode == 'mouse':
             self.movemodeMouse()
+        elif self.movemode == 'wander':
+            self.movemodeWander()
 
     @property
     def world_position(self):
@@ -33,8 +38,39 @@ class Pawn(Actor):
 
     def movemodeMouse(self):
         pos = pg.mouse.get_pos()
-        self.world_position = (1,1,1)
+        self.world_position = (pos[0],pos[1],0)
         posx = pos[0] - self.sprite.rect.width/2
         posy = pos[1] - self.sprite.rect.height/2
 
         self.sprite.rect.topleft = (posx,posy)
+    
+    def movemodeWander(self, speed =0.1):
+        #oldvel = self.velocity_
+        oldpos = self.world_position
+        screen = pg.display.get_window_size()
+        newx = 0
+        newy = 0
+        if self.moveRight:
+            newx = speed + oldpos[0]
+        else:
+            newx = (speed * -1) + oldpos[0]
+        if self.moveDown:
+            newy = speed + oldpos[1]
+        else:
+            newy = (speed * -1) + oldpos[1]
+
+        self.world_position = (newx,newy,0)
+
+        if self.world_position[0] < 0:
+            self.moveRight = True
+        if self.world_position[0] > screen[0]:
+            self.moveRight = False
+        if self.world_position[1] < 0:
+            self.moveDown = True
+        if self.world_position[1] > screen[1]:
+            self.moveDown = False
+
+        self.sprite.rect.topleft = (self.world_position[0],self.world_position[1])
+        
+        
+            

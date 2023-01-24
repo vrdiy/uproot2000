@@ -4,6 +4,7 @@ from pygameBoilerplate import load_image, load_sound
 from paths import PROJECT_ROOT, RESOURCES_DIR
 from pawn import Pawn
 from collision import StationaryCollision
+from uprootCharacter import UprootCharacter
 
 def main():
     pg.init()
@@ -17,12 +18,15 @@ def main():
     screen.blit(background, (0, 0))
     pg.display.flip()
 
-    uproot = Pawn(filename = 'uprootpixel.png',movemode = 'mouse')
-    sprites = pg.sprite.RenderPlain((uproot.sprite))
+    uproot = UprootCharacter(filename = 'uprootpixel.png',movemode = 'mouse')
+    uprootNPC = UprootCharacter(filename = 'uprootpixel.png',movemode = 'wander')
+
+    sprites = pg.sprite.RenderPlain(([uproot.sprite,uprootNPC.sprite]))
     print(uproot.collision_type)
     uproot.collision_type = StationaryCollision()
     print(uproot.collision_type)
 
+    print(pg.display.get_window_size())
     exit = False
     while not exit:
         #print(uproot.world_position)
@@ -32,6 +36,7 @@ def main():
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 exit = True
         uproot.update()
+        uprootNPC.update()
         screen.blit(background,(0,0))
         sprites.draw(screen)
         pg.display.flip()
