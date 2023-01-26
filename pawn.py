@@ -21,12 +21,18 @@ class Pawn(Actor):
         self.sprite = pg.sprite.Sprite()
         pg.sprite.Sprite.__init__(self)
         self.sprite.image, self.sprite.rect= load_image(RESOURCES_DIR,self.filename,-1)
+        self.hurtbox = self.sprite.rect
 
+    def x(self):
+        return self.world_position[0]
+    def y(self):
+        return self.world_position[1]
     def update(self):
         if self.movemode == 'mouse':
             self.movemodeMouse()
         elif self.movemode == 'wander':
             self.movemodeWander()
+
         self.draw()
 
     @property

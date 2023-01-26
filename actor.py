@@ -24,7 +24,7 @@ class Actor(ABC):
     @abstractmethod
     def world_position(self,absolute_world_position):
         pass
-   
+
     @property
     def collision_type(self):
         return self.collision_type_
