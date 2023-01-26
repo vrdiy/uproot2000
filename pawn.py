@@ -3,7 +3,7 @@ import pygame as pg
 from pygameBoilerplate import load_image, load_sound
 from paths import PROJECT_ROOT, RESOURCES_DIR
 from actor import Actor
-from collision import PawnCollision
+import collision
 
 
 class Pawn(Actor):
@@ -13,7 +13,7 @@ class Pawn(Actor):
         assert 'movemode' in kwargs, "Must provide keyword argument 'movemode' to pawn constructor"
         self.filename = kwargs['filename']
         self.movemode = kwargs['movemode']
-        self.collision_type_ = PawnCollision()
+        self.collision_type_ = collision.Pawn
         self.world_position_ = (0,0,0)
         self.velocity_ = (0,0,0)
         self.moveRight = False
@@ -27,6 +27,7 @@ class Pawn(Actor):
             self.movemodeMouse()
         elif self.movemode == 'wander':
             self.movemodeWander()
+        self.draw()
 
     @property
     def world_position(self):
@@ -36,13 +37,14 @@ class Pawn(Actor):
     def world_position(self, absolute_world_position):
         self.world_position_ = absolute_world_position
 
+    def draw(self):
+        posx = self.world_position[0] - self.sprite.rect.width/2
+        posy = self.world_position[1] - self.sprite.rect.height/2
+        self.sprite.rect.topleft = (posx,posy)
+
     def movemodeMouse(self):
         pos = pg.mouse.get_pos()
         self.world_position = (pos[0],pos[1],0)
-        posx = pos[0] - self.sprite.rect.width/2
-        posy = pos[1] - self.sprite.rect.height/2
-
-        self.sprite.rect.topleft = (posx,posy)
     
     def movemodeWander(self, speed =0.1):
         #oldvel = self.velocity_
@@ -69,8 +71,6 @@ class Pawn(Actor):
             self.moveDown = True
         if self.world_position[1] > screen[1]:
             self.moveDown = False
-
-        self.sprite.rect.topleft = (self.world_position[0],self.world_position[1])
         
         
             

@@ -4,103 +4,43 @@ from abc import ABC, abstractmethod, abstractproperty
 from paths import PROJECT_ROOT, RESOURCES_DIR
 
 
-class CollisionType(ABC):
-    
-    @property
-    @abstractmethod
-    def ignore(self):
-        pass
+class CollisionType():
+    def __init__(self,blocks = (),ignores = (), overlaps = ()):
+        self.blocks_ = set(blocks)
+        self.ignores_ = set(ignores)
+        self.overlaps = set(overlaps)
 
-    @ignore.setter
-    @abstractmethod
-    def ignore(self,collision_types_to_ignore):
-        pass
-   
-    @property
-    @abstractmethod
-    def collide(self):
-        pass
-
-    @collide.setter
-    @abstractmethod
-    def collide(self,collision_types_to_collide):
-        pass
-   
-    @property
-    @abstractmethod
-    def overlap(self):
-        pass
-
-    @overlap.setter
-    @abstractmethod
-    def overlap(self,collision_types_to_overlap):
-        pass
-
-
-class PawnCollision(CollisionType):
+#default actor collision type
+class Stationary(CollisionType):
     def __init__(self):
-        self.ignore_ = []
-        self.collide_ = []
-        self.overlap_ = []
-
-    def __str__(self) -> str:
-        return 'Pawn Collision'
-
-    @property
-    def ignore(self):
-        return self.ignore_
-
-    @ignore.setter
-    def ignore(self, collision_types_to_ignore):
-        self.ignore_ = collision_types_to_ignore
-
-    @property
-    def collide(self):
-        return self.collide_
-
-    @collide.setter
-    def collide(self, collision_types_to_collide):
-        self.collide_ = collision_types_to_collide
-
-
-    @property
-    def overlap(self):
-        return self.overlap_
-
-    @overlap.setter
-    def world_position(self, collision_types_to_overlap):
-        self.overlap_ = collision_types_to_overlap
-
-class StationaryCollision(CollisionType):
-    def __init__(self):
-        self.ignore_ = []
-        self.collide_ = []
-        self.overlap_ = []
+        super().__init__(blocks=["Pawn"], ignores=[],overlaps=[])
 
     def __str__(self) -> str:
         return 'Stationary Collision'
 
-    @property
-    def ignore(self):
-        return self.ignore_
+class Pawn(CollisionType):
+    def __init__(self):
+        super().__init__(blocks=["Pawn"], ignores=[],overlaps=["Pickup"])
+    def __str__(self) -> str:
+        return 'Pawn Collision'
 
-    @ignore.setter
-    def ignore(self, collision_types_to_ignore):
-        self.ignore_ = collision_types_to_ignore
-
-    @property
-    def collide(self):
-        return self.collide_
-
-    @collide.setter
-    def collide(self, collision_types_to_collide):
-        self.collide_ = collision_types_to_collide
+class Pickup(CollisionType):
+    def __init__(self):
+        super().__init__(blocks=[], ignores=[],overlaps=["Pawn"])
+    def __str__(self) -> str:
+        return 'Pickup Collision'
 
 
-    @property
-    def overlap(self):
-        return self.overlap_
 
-    @overlap.setter
-    def world_position(self, collision_types_to_overlap):
-        self.overlap_ = collision_types_to_overlap
+def handle_collision(actor1,actor2):
+    a1_collision = actor1.collision_type.__name__
+    a2_collision = actor2.collision_type.__name__
+
+    if a1_collision in a2_collision.blocks:
+        return 'blocks'
+    elif a1_collision in a2_collision.overlaps:
+        return 'overlaps'
+    elif a1_collision in a2_collision.ignores:
+        return 'ignores'
+    else:
+        return 'ignores'

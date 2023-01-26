@@ -2,12 +2,13 @@ import os
 import pygame as pg
 from abc import ABC, abstractmethod, abstractproperty
 from paths import PROJECT_ROOT, RESOURCES_DIR
-
+import collision
 
 class Actor(ABC):
 
     @abstractmethod
     def __init__(self, **kwargs):
+        self.collision_type(collision.Stationary)
         pass
 
     @abstractmethod

@@ -3,7 +3,7 @@ import pygame as pg
 from pygameBoilerplate import load_image, load_sound
 from paths import PROJECT_ROOT, RESOURCES_DIR
 from pawn import Pawn
-from collision import StationaryCollision
+import collision
 from uprootCharacter import UprootCharacter
 
 def main():
@@ -23,7 +23,7 @@ def main():
 
     sprites = pg.sprite.RenderPlain(([uproot.sprite,uprootNPC.sprite]))
     print(uproot.collision_type)
-    uproot.collision_type = StationaryCollision()
+    uproot.collision_type = collision.Stationary
     print(uproot.collision_type)
 
     print(pg.display.get_window_size())
