@@ -49,24 +49,18 @@ class QuadTree:
 
         self.hasChildren = True
 
-        objsToRmv = set()
         for obj in self.objs:
-            objsToRmv = set()
             newQuadrant = self.getNewQuadrant(obj)
             if newQuadrant != -1:
                 self.children[newQuadrant].insert(obj)
-                objsToRmv.add(obj)
-        for obj in objsToRmv:
-            self.objs.remove(obj)
-            print("removed object")
-
+        self.objs = set()
     def getNewQuadrant(self,obj):
         x = obj.x()
         y = obj.y()
-        y_axis_of_this_quadtree = self.rect.x + self.rect.width / 2
-        x_axis_of_this_quadtree = self.rect.y + self.rect.h / 2
+        y_axis_of_this_quadtree = self.rect.x + self.rect.width / 2 # 640 at first layer
+        x_axis_of_this_quadtree = self.rect.y + self.rect.height / 2 # 360 at first layer
 
-        top_half_of_this_quadtree = y < x_axis_of_this_quadtree and y + obj.height < x_axis_of_this_quadtree
+        top_half_of_this_quadtree = (y < x_axis_of_this_quadtree) and (y + obj.height < x_axis_of_this_quadtree)
         bottom_half_of_this_quadtree = y > x_axis_of_this_quadtree
 
         if x >= y_axis_of_this_quadtree and top_half_of_this_quadtree:
@@ -78,6 +72,9 @@ class QuadTree:
         elif x >= y_axis_of_this_quadtree and bottom_half_of_this_quadtree:
             return QUADRANT_FOUR
         else:
+            print(f"{obj},x: {x}, y: {y}")
+            print(f"quadtree tested against: ")
+            print(f"x: {self.rect.x}, y: {self.rect.y}, width: {self.rect.width}, height: {self.rect.height}")
             return -1
 
     def processNodes(self):

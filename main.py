@@ -19,7 +19,7 @@ def main():
     background = background.convert()
     background.fill((255, 255, 255))
     screen.blit(background, (0, 0))
-    quadTree = QuadTree(background,pg.Rect(0,0,1280,720),2)
+    quadTree = QuadTree(background,pg.Rect(0,0,1280,720),1)
     spritelist = []
     crates = set()
     for i in range(30):
