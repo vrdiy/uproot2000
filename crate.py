@@ -24,7 +24,7 @@ class Crate(Actor):
         self.sprite.image = self.img
         self.sprite.rect = self.img.get_rect()
         self.hurtbox = self.sprite.rect
-        self.height = 1
+        self.height = self.sprite.rect.height
         self.width = self.sprite.rect.width
         self.world_position_ = (self.sprite.rect.topleft[0],self.sprite.rect.topleft[1],0)
 
