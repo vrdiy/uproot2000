@@ -6,16 +6,27 @@ import collision
 from actor import Actor
 from quadtree import QuadTree
 
+
+
 class World():
     def __init__(self,rectBounds):
         self.actors = set()
-        self.area = QuadTree()
-
-    
+        self.quadTree = QuadTree(rectBounds)
 
     def tick(self):
         for actor in self.actors:
-            actor.update
-    def add(self,actor):
-        assert isinstance(actor,Actor), "Only add actors to world"
-        self.actors.add(actor)
+            if actor.hasMoved:
+                self.quadTree.insert(actor)
+            actor.update()
+    
+    def checkCollision(self,surface):
+        self.quadTree.processNodes(surface)
+
+    def add(self,actors):
+        #assert isinstance(actors,list) or isinstance(actors,Actor), "Only add actors to world"
+        for actor in actors:
+            self.actors.add(actor)
+            self.quadTree.insert(actor)
+
+
+    

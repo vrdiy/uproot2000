@@ -4,6 +4,7 @@ from pygameBoilerplate import load_image, load_sound
 from paths import PROJECT_ROOT, RESOURCES_DIR
 from actor import Actor
 import collision
+from random import randrange
 
 
 class Crate(Actor):
@@ -38,11 +39,12 @@ class Crate(Actor):
     def update(self):
         self.hasMoved = False
         self.collided = False
-        #self.draw()
+        self.move()
+        self.draw()
     def collision(self, obj):
         if(not self.collided):
             newPos = (self.hurtbox.x-obj.hurtbox.width,self.hurtbox.y-obj.hurtbox.height,0)
-            newPos = (self.hurtbox.x-5,self.hurtbox.y-5,0)
+            newPos = (self.hurtbox.x+randrange(-50,50),self.hurtbox.y+randrange(-50,50))
 
             self.world_position = (newPos)
             #otherNewPos = (obj.hurtbox.x+self.hurtbox.width,obj.hurtbox.y+self.hurtbox.height,0)
@@ -57,6 +59,14 @@ class Crate(Actor):
     def drawRect(self,surface):
         pg.draw.rect(surface,self.color,self.hurtbox,3)
 
+    def move(self):
+        if self.world_position[0] > 1280 or self.world_position[0] < 0:
+            self.world_position = (640,360,0)
+        if self.world_position[1] > 720 or self.world_position[1] < 0:
+            self.world_position = (640,360,0)
+        if 2 == randrange(1000):
+            self.world_position = (self.hurtbox.x+randrange(-20,20),self.hurtbox.y+randrange(-50,50))
+            self.hasMoved = True
 
     @property
     def world_position(self):
@@ -64,12 +74,10 @@ class Crate(Actor):
 
     @world_position.setter
     def world_position(self, absolute_world_position):
-        print("setter called")
+        #print("setter called")
         self.world_position_ = absolute_world_position
         self.hurtbox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
 
     def draw(self):
-        posx = self.world_position[0] - self.sprite.rect.width/2
-        posy = self.world_position[1] - self.sprite.rect.height/2
-        self.sprite.rect.topleft = (posx,posy)
+        self.sprite.rect.topleft = (self.world_position[0],self.world_position[1])
 

@@ -8,6 +8,7 @@ from uprootCharacter import UprootCharacter
 from quadtree import QuadTree
 from crate import Crate
 from random import randrange 
+from world import World
 
 def main():
     pg.init()
@@ -19,20 +20,21 @@ def main():
     background = background.convert()
     background.fill((255, 255, 255))
     screen.blit(background, (0, 0))
-    quadTree = QuadTree(background,pg.Rect(0,0,1280,720),3)
+    #quadTree = QuadTree(background,pg.Rect(0,0,1280,720),3)
+    world = World(pg.Rect(0,0,1280,720))
     spritelist = []
     crates = set()
-    for i in range(40):
+    for i in range(90):
         crate = Crate(filename = 'crate.png')
         crate.world_position= (randrange(0,1000),randrange(0,650),0)
         spritelist.append(crate.sprite)
-        quadTree.insert(crate)
         print(crate.world_position)
         crates.add(crate)
 
+    world.add(crates)
 
     pg.display.flip()
-
+    
     uproot = UprootCharacter(filename = 'uprootpixel.png',movemode = 'mouse')
     uprootNPC = UprootCharacter(filename = 'uprootpixel.png',movemode = 'wander')
     spritelist.append(uproot.sprite)
@@ -41,10 +43,12 @@ def main():
     print(uproot.collision_type)
     uproot.collision_type = collision.Stationary
     print(uproot.collision_type)
-
+    clock = pg.time.Clock()
     print(pg.display.get_window_size())
     exit = False
     while not exit:
+        background.fill((255, 255, 255))
+
         #print(uproot.world_position)
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -53,11 +57,14 @@ def main():
                 exit = True
         uproot.update()
         uprootNPC.update()
+        world.tick()
         for crate in crates:
-            crate.update()
             crate.drawRect(background)
-        quadTree.processNodes()
+        #quadTree.processNodes(background)
+        world.checkCollision(background)
         screen.blit(background,(0,0))
+        clock.tick()
+        print(clock.get_fps())
         sprites.draw(screen)
         pg.display.flip()
         
