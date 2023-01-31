@@ -9,5 +9,8 @@ from pawn import Pawn
 class UprootCharacter(Pawn):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+    def collision(self, obj):
+        return super().collision(obj)
+    def overlap(self, obj):
+        return super().overlap(obj)
     

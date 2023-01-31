@@ -19,12 +19,12 @@ def main():
     background = background.convert()
     background.fill((255, 255, 255))
     screen.blit(background, (0, 0))
-    quadTree = QuadTree(background,pg.Rect(0,0,1280,720),1)
+    quadTree = QuadTree(background,pg.Rect(0,0,1280,720),3)
     spritelist = []
     crates = set()
-    for i in range(30):
+    for i in range(40):
         crate = Crate(filename = 'crate.png')
-        crate.world_position= (randrange(0,900),randrange(0,700),0)
+        crate.world_position= (randrange(0,1000),randrange(0,650),0)
         spritelist.append(crate.sprite)
         quadTree.insert(crate)
         print(crate.world_position)
@@ -55,6 +55,7 @@ def main():
         uprootNPC.update()
         for crate in crates:
             crate.update()
+            crate.drawRect(background)
         quadTree.processNodes()
         screen.blit(background,(0,0))
         sprites.draw(screen)

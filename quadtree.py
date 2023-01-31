@@ -13,15 +13,18 @@ QUADRANT_FOUR = 3
 class QuadTree:
     def __init__(self,surface,rectBounds,numOfObjs = 5):
         assert isinstance(rectBounds,pg.Rect), "Quadtree bounds must be a pygame.Rect instance"
+        print("init quadtree")
         self.surface = surface
         self.rect = rectBounds
         self.hasChildren = False
         self.children = [None] * 4
         self.childRects = [None] * 4
         self.createChildRects()
+        print(self.childRects)
         self.objLimit = numOfObjs
         self.objs = set()
         
+
     def createChildRects(self):
         half_width = self.rect.width / 2
         half_height = self.rect.height / 2
@@ -39,18 +42,23 @@ class QuadTree:
 
     
     def insert(self,obj):
+        print("insert called")
+
         if self.hasChildren:
-            newQuadrant = self.getNewQuadrant(obj)
-            if newQuadrant != -1:
-                self.children[newQuadrant].insert(obj)
-                return
-            else:
-                print("got bad quadrant")
-        self.objs.add(obj)
-        if len(self.objs) > self.objLimit and self.rect.width > 1:
-            self.subdivide()
+            #check which child quadtrees it overlaps
+            quadrants = self.getQuadrants(obj)
+            #print(quadrants)
+            for i in range(4):
+                if quadrants[i] == True:
+                    self.children[i].insert(obj)
+        else:
+            self.objs.add(obj)
+            if (len(self.objs) > self.objLimit) and (self.rect.width > 64):
+                self.subdivide()
 
     def subdivide(self):
+        print("subdivide called")
+
         #Quadrant 1/NE
         self.children[QUADRANT_ONE] = QuadTree(self.surface,self.childRects[QUADRANT_ONE],self.objLimit)
         #Quadrant 2/NW
@@ -63,38 +71,33 @@ class QuadTree:
         self.hasChildren = True
 
         for obj in self.objs:
-            newQuadrant = self.getNewQuadrant(obj)
-            if newQuadrant != -1:
-                self.children[newQuadrant].insert(obj)
+            #check which child quadtrees it overlaps
+            quadrants = self.getQuadrants(obj)
+           # print(quadrants)
+            for i in range(4):
+                print(f"quadrant {i}: {quadrants[i]}")
+                if quadrants[i] == True:
+                    self.children[i].insert(obj)
+
         self.objs = set()
 
 
     def getQuadrants(self,obj):
+        print("get quadrants called")
+        assert isinstance(obj.hurtbox,pg.Rect), "Object needs hurtbox which is pg.Rect instance"
         #later would do collide list of rects that define obj hitboxes
-        pg.Rect.colliderect(obj.hitbox,self.childRects[QUADRANT_ONE])
-
-    def getNewQuadrant(self,obj):
-        x = obj.x()
-        y = obj.y()
-        y_axis_of_this_quadtree = self.rect.x + self.rect.width / 2 # 640 at first layer
-        x_axis_of_this_quadtree = self.rect.y + self.rect.height / 2 # 360 at first layer
-
-        top_half_of_this_quadtree = (y < x_axis_of_this_quadtree) and (y + obj.height < x_axis_of_this_quadtree)
-        bottom_half_of_this_quadtree = y > x_axis_of_this_quadtree
-
-        if x >= y_axis_of_this_quadtree and top_half_of_this_quadtree:
-            return QUADRANT_ONE
-        elif x < y_axis_of_this_quadtree and top_half_of_this_quadtree:
-            return QUADRANT_TWO
-        elif x < y_axis_of_this_quadtree and bottom_half_of_this_quadtree:
-            return QUADRANT_THREE
-        elif x >= y_axis_of_this_quadtree and bottom_half_of_this_quadtree:
-            return QUADRANT_FOUR
-        else:
-            print(f"{obj},x: {x}, y: {y}")
-            print(f"quadtree tested against: ")
-            print(f"x: {self.rect.x}, y: {self.rect.y}, width: {self.rect.width}, height: {self.rect.height}")
-            return -1
+        print(f"obj rect:{obj.hurtbox}, quadrant 1 rect: {self.childRects[QUADRANT_ONE]}")
+        inQuadOne = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_ONE])
+        print(f"obj rect:{obj.hurtbox}, quadrant 2 rect: {self.childRects[QUADRANT_TWO]}")
+        inQuadTwo = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_TWO])
+        print(f"obj rect:{obj.hurtbox}, quadrant 3 rect: {self.childRects[QUADRANT_THREE]}")
+        inQuadThree = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_THREE])
+        print(f"obj rect:{obj.hurtbox}, quadrant 4 rect: {self.childRects[QUADRANT_FOUR]}")
+        inQuadFour = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_FOUR])
+       
+        quads =  [inQuadOne,inQuadTwo,inQuadThree,inQuadFour]
+        print(quads)
+        return [inQuadOne,inQuadTwo,inQuadThree,inQuadFour]
 
     def processNodes(self):
 
@@ -104,4 +107,17 @@ class QuadTree:
         
             pg.draw.rect(self.surface,pg.Color(187,190,80,255),self.rect,3)
         else:
+            for obj in self.objs:
+                for other_obj in self.objs:
+                    if obj is not other_obj:
+                        if pg.Rect.colliderect(obj.hurtbox,other_obj.hurtbox):
+                            if collision.handle_collision(obj,other_obj) == 'blocks':
+                                obj.collision(other_obj)
+                            elif collision.handle_collision(obj,other_obj) == 'overlaps':
+                                obj.overlaps(other_obj)
+            unmovedObjs = set()
+            for obj in self.objs:
+                if not obj.hasMoved:
+                    unmovedObjs.add(obj)
+            self.objs = unmovedObjs
             pg.draw.rect(self.surface,pg.Color(255,0,0,255),self.rect,1)

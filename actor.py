@@ -15,6 +15,14 @@ class Actor(ABC):
     def update(self):
         pass
 
+    @abstractmethod
+    def collision(self,obj):
+        pass
+    
+    @abstractmethod
+    def overlap(self,obj):
+        pass
+
     @property
     @abstractmethod
     def world_position(self):
