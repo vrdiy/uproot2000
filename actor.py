@@ -34,6 +34,15 @@ class Actor(ABC):
         pass
 
     @property
+    @abstractmethod
+    def boundingBox(self):
+        pass
+    @boundingBox.setter
+    @abstractmethod
+    def boundingBox(self,rectBounds):
+        pass
+
+    @property
     def collision_type(self):
         return self.collision_type_
 
