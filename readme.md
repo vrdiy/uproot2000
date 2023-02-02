@@ -1,2 +1,2 @@
 # Uproot2000
-A small game messing around with pygame with my character Uproot.
+A game made with the pygame library, to build my concepts of game programming, will likely be split into the engine and then game. With help from ChatGPT!
