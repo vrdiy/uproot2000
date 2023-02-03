@@ -95,16 +95,16 @@ class QuadTree:
 
     def getQuadrants(self,obj):
         #print("get quadrants called")
-        assert isinstance(obj.hurtbox,pg.Rect), "Object needs hurtbox which is pg.Rect instance"
+        assert isinstance(obj.boundingBox,pg.Rect), "Object needs hurtbox which is pg.Rect instance"
         #later would do collide list of rects that define obj hitboxes
        # print(f"obj rect:{obj.hurtbox}, quadrant 1 rect: {self.childRects[QUADRANT_ONE]}")
-        inQuadOne = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_ONE])
+        inQuadOne = pg.Rect.colliderect(obj.boundingBox,self.childRects[QUADRANT_ONE])
         #print(f"obj rect:{obj.hurtbox}, quadrant 2 rect: {self.childRects[QUADRANT_TWO]}")
-        inQuadTwo = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_TWO])
+        inQuadTwo = pg.Rect.colliderect(obj.boundingBox,self.childRects[QUADRANT_TWO])
        # print(f"obj rect:{obj.hurtbox}, quadrant 3 rect: {self.childRects[QUADRANT_THREE]}")
-        inQuadThree = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_THREE])
+        inQuadThree = pg.Rect.colliderect(obj.boundingBox,self.childRects[QUADRANT_THREE])
         #print(f"obj rect:{obj.hurtbox}, quadrant 4 rect: {self.childRects[QUADRANT_FOUR]}")
-        inQuadFour = pg.Rect.colliderect(obj.hurtbox,self.childRects[QUADRANT_FOUR])
+        inQuadFour = pg.Rect.colliderect(obj.boundingBox,self.childRects[QUADRANT_FOUR])
        
         quads =  [inQuadOne,inQuadTwo,inQuadThree,inQuadFour]
        # print(quads)
@@ -123,9 +123,9 @@ class QuadTree:
                     if obj is not other_obj:
                         if pg.Rect.colliderect(obj.boundingBox,other_obj.boundingBox):
                             if collision.handle_collision(obj,other_obj) == 'blocks':
-                                obj.collision(other_obj)
+                                obj.onCollision(other_obj)
                             elif collision.handle_collision(obj,other_obj) == 'overlaps':
-                                obj.overlaps(other_obj)
+                                obj.onOverlaps(other_obj)
             unmovedObjs = set()
             for obj in self.objs:
                 if not obj.hasMoved:

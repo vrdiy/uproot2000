@@ -35,12 +35,12 @@ class Crate(Actor):
 
     @property
     def boundingBox(self):
-        return self.world_position_
+        return self.boundingBox_
 
     @boundingBox.setter
     def boundingBox(self, rectBounds):
         #print("setter called")
-        self.boundingBox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
+        self.boundingBox_ = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
 
     def x(self):
         return self.world_position[0]
@@ -51,10 +51,10 @@ class Crate(Actor):
         self.collided = False
         self.move()
         self.draw()
-    def collision(self, obj):
+    def onCollision(self, obj):
         if(not self.collided):
-            newPos = (self.hurtbox.x-obj.hurtbox.width,self.hurtbox.y-obj.hurtbox.height,0)
-            newPos = (self.hurtbox.x+randrange(-50,50),self.hurtbox.y+randrange(-50,50))
+            newPos = (self.boundingBox.x-obj.boundingBox.width,self.boundingBox.y-obj.boundingBox.height,0)
+            newPos = (self.boundingBox.x+randrange(-50,50),self.boundingBox.y+randrange(-50,50))
 
             self.world_position = (newPos)
             #otherNewPos = (obj.hurtbox.x+self.hurtbox.width,obj.hurtbox.y+self.hurtbox.height,0)
@@ -64,10 +64,10 @@ class Crate(Actor):
             self.collided = True
             self.hasMoved = True
             obj.collided = True
-    def overlap(self, obj):
-        return super().overlap(obj)
+    def onOverlap(self, obj):
+        return super().onOverlap(obj)
     def drawRect(self,surface):
-        pg.draw.rect(surface,self.color,self.hurtbox,3)
+        pg.draw.rect(surface,self.color,self.boundingBox,3)
 
     def move(self):
         if self.world_position[0] > 1280 or self.world_position[0] < 0:
@@ -75,7 +75,7 @@ class Crate(Actor):
         if self.world_position[1] > 720 or self.world_position[1] < 0:
             self.world_position = (640,360,0)
         if 2 == randrange(1000):
-            self.world_position = (self.hurtbox.x+randrange(-20,20),self.hurtbox.y+randrange(-50,50))
+            self.world_position = (self.boundingBox.x+randrange(-20,20),self.boundingBox.y+randrange(-50,50))
             self.hasMoved = True
 
     @property
@@ -86,7 +86,7 @@ class Crate(Actor):
     def world_position(self, absolute_world_position):
         #print("setter called")
         self.world_position_ = absolute_world_position
-        self.hurtbox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
+        self.boundingBox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
 
     def draw(self):
         self.sprite.rect.topleft = (self.world_position[0],self.world_position[1])

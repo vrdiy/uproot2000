@@ -9,6 +9,8 @@ class Actor(ABC):
     @abstractmethod
     def __init__(self, **kwargs):
         self.collision_type(collision.Stationary)
+        self.world_position_ = (0,0,0)
+        self.boundingBox_ = pg.Rect(0,0,100,100)
         pass
 
     @abstractmethod
@@ -16,29 +18,29 @@ class Actor(ABC):
         pass
 
     @abstractmethod
-    def collision(self,obj):
+    def onCollision(self,obj):
         pass
     
     @abstractmethod
-    def overlap(self,obj):
+    def onOverlap(self,obj):
         pass
 
     @property
     @abstractmethod
     def world_position(self):
-        pass
+        return self.world_position_
 
     @world_position.setter
     @abstractmethod
     def world_position(self,absolute_world_position):
-        pass
+        assert isinstance(absolute_world_position,tuple), "World position is a 3 dimensional tuple"
+        self.world_position_ = absolute_world_position
+        return
 
     @property
-    @abstractmethod
     def boundingBox(self):
         pass
     @boundingBox.setter
-    @abstractmethod
     def boundingBox(self,rectBounds):
         pass
 

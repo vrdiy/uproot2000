@@ -12,6 +12,12 @@ class CollisionType():
 
 #default actor collision type
 class Stationary(CollisionType):
+    __instance = None
+    def __new__(cls):
+        if Stationary.__instance is None:
+            Stationary.__instance = object.__new__(cls)
+        return Stationary.__instance 
+
     def __init__(self):
         super().__init__(blocks=["Pawn","Stationary"], ignores=[],overlaps=[])
 
@@ -19,12 +25,24 @@ class Stationary(CollisionType):
         return 'Stationary Collision'
 
 class Pawn(CollisionType):
+    __instance = None
+    def __new__(cls):
+        if Pawn.__instance is None:
+            Pawn.__instance = object.__new__(cls)
+        return Pawn.__instance 
+
     def __init__(self):
         super().__init__(blocks=["Pawn"], ignores=[],overlaps=["Pickup"])
     def __str__(self) -> str:
         return 'Pawn Collision'
 
 class Pickup(CollisionType):
+    __instance = None
+    def __new__(cls):
+        if Pickup.__instance is None:
+            Pickup.__instance = object.__new__(cls)
+        return Pickup.__instance 
+
     def __init__(self):
         super().__init__(blocks=[], ignores=[],overlaps=["Pawn"])
     def __str__(self) -> str:
