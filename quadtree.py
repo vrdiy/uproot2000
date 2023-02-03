@@ -121,7 +121,7 @@ class QuadTree:
             for obj in self.objs:
                 for other_obj in self.objs:
                     if obj is not other_obj:
-                        if pg.Rect.colliderect(obj.hurtbox,other_obj.hurtbox):
+                        if pg.Rect.colliderect(obj.boundingBox,other_obj.boundingBox):
                             if collision.handle_collision(obj,other_obj) == 'blocks':
                                 obj.collision(other_obj)
                             elif collision.handle_collision(obj,other_obj) == 'overlaps':
