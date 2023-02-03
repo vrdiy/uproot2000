@@ -26,11 +26,21 @@ class Crate(Actor):
         self.sprite.rect = self.img.get_rect()
         self.height = self.sprite.rect.height
         self.width = self.sprite.rect.width
-        self.hurtbox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
+        self.boundingBox_ = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
         self.world_position_ = (self.sprite.rect.topleft[0],self.sprite.rect.topleft[1],0)
         self.color = pg.Color(255,0,0,255)
         self.collided = False
         self.hasMoved = False
+
+
+    @property
+    def boundingBox(self):
+        return self.world_position_
+
+    @boundingBox.setter
+    def boundingBox(self, rectBounds):
+        #print("setter called")
+        self.boundingBox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
 
     def x(self):
         return self.world_position[0]
