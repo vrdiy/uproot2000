@@ -36,12 +36,17 @@ def main():
     pg.display.flip()
     
     uproot = UprootCharacter(filename = 'uprootpixel.png',movemode = 'mouse')
+    world.add(uproot)
     uprootNPC = UprootCharacter(filename = 'uprootpixel.png',movemode = 'wander')
+    world.add(uprootNPC)
+
     spritelist.append(uproot.sprite)
     spritelist.append(uprootNPC.sprite)
     sprites = pg.sprite.RenderPlain((spritelist))
     print(uproot.collision_type)
     uproot.collision_type = collision.Stationary
+    uprootNPC.collision_type = collision.Stationary
+
     print(uproot.collision_type)
     clock = pg.time.Clock()
     print(pg.display.get_window_size())

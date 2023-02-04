@@ -21,13 +21,16 @@ class Pawn(Actor):
         self.sprite = pg.sprite.Sprite()
         pg.sprite.Sprite.__init__(self)
         self.sprite.image, self.sprite.rect= load_image(RESOURCES_DIR,self.filename,-1)
-        self.hurtbox = self.sprite.rect
+
+        self.boundingBox_ = self.sprite.rect
 
     def x(self):
         return self.world_position[0]
     def y(self):
         return self.world_position[1]
     def update(self):
+        self.collided = False
+        self.hasMoved = False
         if self.movemode == 'mouse':
             self.movemodeMouse()
         elif self.movemode == 'wander':
@@ -36,12 +39,25 @@ class Pawn(Actor):
         self.draw()
 
     @property
+    def boundingBox(self):
+        return self.boundingBox_
+
+    @boundingBox.setter
+    def boundingBox(self, rectBounds):
+        assert isinstance(rectBounds,pg.Rect), "Bounding Box needs to be pygame.Rect instance"
+        #print("setter called")
+        self.boundingBox_ = rectBounds
+
+
+    @property
     def world_position(self):
         return self.world_position_
 
     @world_position.setter
     def world_position(self, absolute_world_position):
         self.world_position_ = absolute_world_position
+        self.boundingBox_.x = absolute_world_position[0]
+        self.boundingBox_.y = absolute_world_position[1]
 
     def draw(self):
         posx = self.world_position[0] - self.sprite.rect.width/2
@@ -51,6 +67,7 @@ class Pawn(Actor):
     def movemodeMouse(self):
         pos = pg.mouse.get_pos()
         self.world_position = (pos[0],pos[1],0)
+        self.hasMoved = True
     
     def movemodeWander(self, speed =0.1):
         #oldvel = self.velocity_
@@ -77,6 +94,9 @@ class Pawn(Actor):
             self.moveDown = True
         if self.world_position[1] > screen[1]:
             self.moveDown = False
+            
+        self.hasMoved = True
+        
         
         
             

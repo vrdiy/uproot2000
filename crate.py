@@ -17,6 +17,7 @@ class Crate(Actor):
         self.velocity_ = (0,0,0)
         self.moveRight = False
         self.moveDown = False
+
         self.sprite = pg.sprite.Sprite()
         pg.sprite.Sprite.__init__(self)
         self.sprite.image, self.sprite.rect= load_image(RESOURCES_DIR,self.filename,-1,1)
@@ -26,7 +27,8 @@ class Crate(Actor):
         self.sprite.rect = self.img.get_rect()
         self.height = self.sprite.rect.height
         self.width = self.sprite.rect.width
-        self.boundingBox_ = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
+
+        self.boundingBox_ = pg.Rect(self.world_position[0],self.world_position[1],self.width,self.height)
         self.world_position_ = (self.sprite.rect.topleft[0],self.sprite.rect.topleft[1],0)
         self.color = pg.Color(255,0,0,255)
         self.collided = False
@@ -39,8 +41,9 @@ class Crate(Actor):
 
     @boundingBox.setter
     def boundingBox(self, rectBounds):
+        assert isinstance(rectBounds,pg.Rect), "Bounding Box needs to be pygame.Rect instance"
         #print("setter called")
-        self.boundingBox_ = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
+        self.boundingBox_ = rectBounds
 
     def x(self):
         return self.world_position[0]
@@ -86,7 +89,8 @@ class Crate(Actor):
     def world_position(self, absolute_world_position):
         #print("setter called")
         self.world_position_ = absolute_world_position
-        self.boundingBox = pg.Rect(self.world_position_[0],self.world_position_[1],self.width,self.height)
+        self.boundingBox.x = absolute_world_position[0]
+        self.boundingBox.y = absolute_world_position[1]
 
     def draw(self):
         self.sprite.rect.topleft = (self.world_position[0],self.world_position[1])

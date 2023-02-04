@@ -22,11 +22,17 @@ class World():
     def checkCollision(self,surface):
         self.quadTree.processNodes(surface)
 
-    def add(self,actors):
-        #assert isinstance(actors,list) or isinstance(actors,Actor), "Only add actors to world"
+    def add(self,*actors_):
+        actors = []
+        for actor in actors_:
+            if isinstance(actor, set):
+                actors.extend(list(actor))
+            else:
+                actors.append(actor)
         for actor in actors:
             self.actors.add(actor)
             self.quadTree.insert(actor)
+            
 
 
     

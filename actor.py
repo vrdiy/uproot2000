@@ -11,6 +11,8 @@ class Actor(ABC):
         self.collision_type(collision.Stationary)
         self.world_position_ = (0,0,0)
         self.boundingBox_ = pg.Rect(0,0,100,100)
+        self.collided = False
+        self.hasMoved = False
         pass
 
     @abstractmethod

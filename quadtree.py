@@ -26,6 +26,23 @@ class QuadTree:
         self.objLimit = numOfObjs
         self.objs = set()
         
+    #not working
+    def unDivide(self):
+        if self.hasChildren:
+            objs = set()
+            for child in self.children:
+                if child.hasChildren:
+                    return False
+                if len(child.objs) > 0 and len(child.objs) < OBJ_LIMIT:
+                    for obj in child.objs:
+                        objs.add(obj)
+            if (len(objs) + len(self.objs)) < OBJ_LIMIT:
+                for child in self.children:
+                    del child
+                self.children = [None] * 4
+                self.hasChildren = False
+                self.objs.update(objs)
+
     def tryMerge(self):
         if self.hasChildren:
             for child in self.children:
