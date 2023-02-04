@@ -23,6 +23,8 @@ class Pawn(Actor):
         self.sprite.image, self.sprite.rect= load_image(RESOURCES_DIR,self.filename,-1)
 
         self.boundingBox_ = self.sprite.rect
+        self.collided = False
+        self.hasMoved = False
 
     def x(self):
         return self.world_position[0]

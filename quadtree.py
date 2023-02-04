@@ -36,9 +36,13 @@ class QuadTree:
                 if len(child.objs) > 0 and len(child.objs) < OBJ_LIMIT:
                     for obj in child.objs:
                         objs.add(obj)
+                else:
+                    return False
             if (len(objs) + len(self.objs)) < OBJ_LIMIT:
                 for child in self.children:
-                    del child
+                    if child is not None:
+                        del child
+                    child = None
                 self.children = [None] * 4
                 self.hasChildren = False
                 self.objs.update(objs)
@@ -128,7 +132,7 @@ class QuadTree:
         return [inQuadOne,inQuadTwo,inQuadThree,inQuadFour]
 
     def processNodes(self,surface):
-        self.tryMerge()
+        self.unDivide()
         if self.hasChildren:
             for quadrant in self.children:
                 quadrant.processNodes(surface)

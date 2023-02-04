@@ -24,7 +24,7 @@ def main():
     world = World(pg.Rect(0,0,1280,720))
     spritelist = []
     crates = set()
-    for i in range(90):
+    for i in range(70):
         crate = Crate(filename = 'crate.png')
         crate.world_position= (randrange(0,1000),randrange(0,650),0)
         spritelist.append(crate.sprite)
@@ -51,21 +51,19 @@ def main():
     clock = pg.time.Clock()
     print(pg.display.get_window_size())
     exit = False
-    while not exit:
-        background.fill((255, 255, 255))
 
-        #print(uproot.world_position)
+
+    while not exit:
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 exit = True
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 exit = True
-        uproot.update()
-        uprootNPC.update()
+        
+        background.fill((255, 255, 255))
+        
         world.tick()
-        for crate in crates:
-            crate.drawRect(background)
-        #quadTree.processNodes(background)
         world.checkCollision(background)
         screen.blit(background,(0,0))
         clock.tick()
