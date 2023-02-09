@@ -18,6 +18,7 @@ class RigidBody():
             self.autoMass()
         else:
             self.mass = mass
+        self.velocity = np.array([0,0,0])
     
     #Calculate approximate mass based on size of bounding box
     def autoMass(self):
