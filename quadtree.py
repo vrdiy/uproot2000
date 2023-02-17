@@ -4,6 +4,7 @@ from pygameBoilerplate import load_image, load_sound
 from paths import PROJECT_ROOT, RESOURCES_DIR
 from actor import Actor
 import collision
+import physics
 
 QUADRANT_ONE = 0
 QUADRANT_TWO = 1
@@ -144,6 +145,7 @@ class QuadTree:
                     if obj is not other_obj:
                         if pg.Rect.colliderect(obj.boundingBox,other_obj.boundingBox):
                             if collision.handle_collision(obj,other_obj) == 'blocks':
+                                physics.collide(obj,other_obj)
                                 obj.onCollision(other_obj)
                             elif collision.handle_collision(obj,other_obj) == 'overlaps':
                                 obj.onOverlaps(other_obj)

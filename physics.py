@@ -33,12 +33,12 @@ def solveCollision(obj1,obj2,deltaTime):
     obj2_acc = (v1 - v2) / deltaTime
 
 #
-def collide(obj1, obj2):
-    m1 = obj1.force / obj1.velocity
-    m2 = obj2.force / obj2.velocity
-    v1_after = (2 * m2) / (m1 + m2) * obj2.velocity
-    v2_after = (2 * m1) / (m1 + m2) * obj1.velocity
-    obj1.velocity = v1_after
-    obj2.velocity = v2_after
-    obj1.force = obj1.velocity * m1
-    obj2.force = obj2.velocity * m2
+def collide(actor1, actor2):
+    m1 = actor1.rigidbody.force / actor1.rigidbody.velocity
+    m2 = actor2.rigidbody.force / actor2.rigidbody.velocity
+    v1_after = (2 * m2) / (m1 + m2) * actor2.rigidbody.velocity
+    v2_after = (2 * m1) / (m1 + m2) * actor1.rigidbody.velocity
+    actor1.rigidbody.velocity = v1_after
+    actor2.rigidbody.velocity = v2_after
+    actor1.rigidbody.force = actor1.rigidbody.velocity * m1
+    actor2.rigidbody.force = actor2.rigidbody.velocity * m2
